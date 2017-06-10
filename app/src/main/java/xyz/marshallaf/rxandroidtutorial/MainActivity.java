@@ -2,13 +2,15 @@ package xyz.marshallaf.rxandroidtutorial;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import com.jakewharton.rxbinding.view.RxView;
+import com.jakewharton.rxbinding.widget.RxTextView;
+
+import rx.functions.Action1;
 
 public class MainActivity extends Activity {
 
@@ -19,34 +21,24 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // create an observable that will emit a sequence of integers
-        Observable observable = Observable.just(1, 2, 3)
-                .subscribeOn(Schedulers.newThread());
+        Button button = (Button) findViewById(R.id.button);
+        TextView textView = (TextView) findViewById(R.id.textView);
+        EditText editText = (EditText) findViewById(R.id.editText);
 
-        // create an observer that will subscribe to our observable
-        Observer<Integer> observer = new Observer<Integer>() {
-            @Override
-            public void onSubscribe(@NonNull Disposable d) {
-                Log.e(LOG_TAG, "onSubscribe called on thread " + Thread.currentThread().getName() + ".");
-            }
+        RxView.clicks(button)
+                .subscribe(new Action1<Void>() {
+                    @Override
+                    public void call(Void aVoid) {
+                        Toast.makeText(MainActivity.this, "RxView.clicks", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
-            @Override
-            public void onNext(@NonNull Integer integer) {
-                Log.e(LOG_TAG, "onNext: " + integer + " on thread " + Thread.currentThread().getName());
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-                Log.e(LOG_TAG, "onError: ");
-            }
-
-            @Override
-            public void onComplete() {
-                Log.e(LOG_TAG, "onComplete called on thread " + Thread.currentThread().getName() + ". Observable is finished emitting!");
-            }
-        };
-
-        // subscribe the observer to the observable
-        observable.subscribe(observer);
+        RxTextView.textChanges(editText)
+                .subscribe(new Action1<CharSequence>() {
+                    @Override
+                    public void call(CharSequence charSequence) {
+                        textView.setText(charSequence);
+                    }
+                });
     }
 }
