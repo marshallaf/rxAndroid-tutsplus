@@ -10,8 +10,6 @@ import android.widget.Toast;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
-import rx.functions.Action1;
-
 public class MainActivity extends Activity {
 
     private static final String LOG_TAG = MainActivity.class.getName();
@@ -26,19 +24,9 @@ public class MainActivity extends Activity {
         EditText editText = (EditText) findViewById(R.id.editText);
 
         RxView.clicks(button)
-                .subscribe(new Action1<Void>() {
-                    @Override
-                    public void call(Void aVoid) {
-                        Toast.makeText(MainActivity.this, "RxView.clicks", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                .subscribe(aVoid -> Toast.makeText(MainActivity.this, "RxView.clicks", Toast.LENGTH_SHORT).show());
 
         RxTextView.textChanges(editText)
-                .subscribe(new Action1<CharSequence>() {
-                    @Override
-                    public void call(CharSequence charSequence) {
-                        textView.setText(charSequence);
-                    }
-                });
+                .subscribe(charSequence -> textView.setText(charSequence));
     }
 }
