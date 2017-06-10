@@ -29,6 +29,11 @@ android {
         sourceCompatibility org.gradle.api.JavaVersion.VERSION_1_8
         targetCompatibility org.gradle.api.JavaVersion.VERSION_1_8
     }
+
+    // exclude RxJava META-INF to avoid DuplicateFileException
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
 }
 
 dependencies {
