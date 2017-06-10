@@ -7,8 +7,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jakewharton.rxbinding.view.RxView;
-import com.jakewharton.rxbinding.widget.RxTextView;
+import com.jakewharton.rxbinding2.view.RxView;
+import com.jakewharton.rxbinding2.widget.RxTextView;
+
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class MainActivity extends Activity {
 
@@ -24,6 +28,8 @@ public class MainActivity extends Activity {
         EditText editText = (EditText) findViewById(R.id.editText);
 
         RxView.clicks(button)
+                .debounce(500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aVoid -> Toast.makeText(MainActivity.this, "RxView.clicks", Toast.LENGTH_SHORT).show());
 
         RxTextView.textChanges(editText)
